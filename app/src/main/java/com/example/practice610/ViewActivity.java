@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -22,6 +24,7 @@ public class ViewActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ListView lvProducts;
+    private List<Product> productList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +32,10 @@ public class ViewActivity extends AppCompatActivity {
 
         context = this;
         db = AppDatabase.getAppDatabase(context);
-        db.productDao().getAllProduct();
-        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, new String[]{
+        productList = db.productDao().getAllProduct();
+        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.item, (Cursor) productList, new String[]{
+                "ID", "NAME", "QUANTITY"}, new int[]{R.id.tvId, R.id.tvName, R.id.tvQuantity},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         lvProducts.setAdapter(simpleCursorAdapter);
 
